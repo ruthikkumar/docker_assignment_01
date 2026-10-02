@@ -1,0 +1,108 @@
+---
+services:
+  movie_booking:
+    image: shaikmustafa/paytm:movie
+    restart: always
+    ports:
+      - "1111:80"
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+        reservations:
+          cpus: "0.25"
+          memory: 64M
+
+    env_file:
+      - ./movie_svc.env
+
+    volumes:
+      - movie_volume:/opt/ruthik_movie/
+
+    networks:
+      - movie_network
+    secrets:
+      - movie_db_password
+
+  bus_booking:
+    image: shaikmustafa/paytm:bus
+    restart: always
+    ports:
+      - "2222:80"
+    deploy:
+      replicas: 4
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+        reservations:
+          cpus: "0.25"
+          memory: 64M
+    env_file:
+      - ./bus_svc.env
+
+    volumes:
+      - bus_volume:/opt/ruthik_bus/
+
+    networks:
+      - bus_network
+    secrets:
+      - bus_db_password
+
+
+  game:
+    image: shaikmustafa/mygame
+    restart: always
+    ports:
+      - "3333:80"
+    deploy:
+      replicas: 6
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+        reservations:
+          cpus: "0.25"
+          memory: 64M
+    env_file:
+      - ./game.env
+
+    volumes:
+      - game_volume:/opt/ruthik_game
+
+    networks:
+      - game_network
+    secrets:
+      - game_db_password
+
+
+
+volumes:
+  movie_volume:
+  bus_volume:
+  game_volume:
+
+
+networks:
+  movie_network:
+    driver: overlay
+  bus_network:
+    driver: overlay
+  game_network:
+    driver: overlay
+
+
+secrets:
+  movie_db_password:
+    external: true
+  bus_db_password:
+    external: true
+  game_db_password:
+    external: true
+
+
+
+
+
