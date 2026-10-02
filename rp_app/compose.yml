@@ -1,0 +1,22 @@
+---
+services:
+  food:
+    container_name: food-cont
+    build: ./food/
+    ports:
+      - "5001:80"
+
+  instamart:
+    container_name: instamart-cont
+    build: ./instamart/
+    ports:
+      - "5002:80"
+
+
+  reverse_proxy:
+    container_name: rp_cont
+    build: ./
+    ports:
+      - "5000:80"
+
+
